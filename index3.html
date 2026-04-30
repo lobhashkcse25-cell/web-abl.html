@@ -1,0 +1,194 @@
+<html>
+<head>
+<title>Skyline Properties</title>
+
+<style>
+body{margin:0;font-family:Arial;background:#f4f6f9;}
+
+/* NAVBAR */
+nav{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px;
+background:#2c3e50;
+color:white;
+}
+
+nav .menu a{
+margin-left:15px;
+color:white;
+text-decoration:none;
+}
+
+/* FILTER */
+.filter{
+display:flex;
+gap:10px;
+padding:10px;
+justify-content:center;
+background:white;
+}
+
+input,select,button{
+padding:8px;
+}
+
+/* GRID */
+.container{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:15px;
+padding:15px;
+}
+
+/* CARD */
+.card{
+background:white;
+border-radius:8px;
+overflow:hidden;
+cursor:pointer;
+}
+
+.card img{
+width:100%;
+height:150px;
+object-fit:cover;
+}
+
+.card p{
+margin:5px;
+}
+
+/* MODAL */
+.modal{
+position:fixed;
+top:0;left:0;
+width:100%;height:100%;
+background:rgba(0,0,0,0.6);
+display:none;
+justify-content:center;
+align-items:center;
+}
+
+.box{
+background:white;
+padding:15px;
+border-radius:8px;
+width:90%;
+max-width:400px;
+}
+
+/* FOOTER */
+footer{
+background:#2c3e50;
+color:white;
+padding:20px;
+text-align:center;
+margin-top:20px;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav>
+<h2>🏙 Skyline Properties</h2>
+<div class="menu">
+<a href="#">Home</a>
+<a href="#">Properties</a>
+<a href="#">Contact</a>
+</div>
+</nav>
+
+<!-- FILTER -->
+<div class="filter">
+<input id="search" placeholder="Search city">
+<select id="bhk">
+<option value="all">All</option>
+<option value="2">2 BHK</option>
+<option value="3">3 BHK</option>
+<option value="4">4+ BHK</option>
+</select>
+<button onclick="filter()">Apply</button>
+</div>
+
+<!-- LIST -->
+<div class="container" id="list"></div>
+
+<!-- MODAL -->
+<div class="modal" id="modal" onclick="closeModal()">
+<div class="box" onclick="event.stopPropagation()">
+<img id="img" style="width:100%">
+<h3 id="price"></h3>
+<p id="info"></p>
+</div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+<p>© 2026 Skyline Properties</p>
+<p>Email: skyline@email.com | Phone: +91 9876543210</p>
+</footer>
+
+<script>
+
+/* DATA WITH EXTRA ROW */
+const data=[
+{price:450000,bhk:4,city:"Mumbai",img:"https://images.unsplash.com/photo-1560448204-e02f11c3d0e2"},
+{price:320000,bhk:3,city:"Pune",img:"https://images.unsplash.com/photo-1570129477492-45c003edd2be"},
+{price:210000,bhk:2,city:"Nagpur",img:"https://images.unsplash.com/photo-1599423300746-b62533397364"},
+{price:500000,bhk:4,city:"Hyderabad",img:"https://images.unsplash.com/photo-1600607687939-ce8a6c25118c"},
+
+/* NEW ROW */
+{price:275000,bhk:2,city:"Chennai",img:"https://images.unsplash.com/photo-1600573472550-8090b5e0745e"},
+{price:720000,bhk:5,city:"Gurgaon",img:"https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde"},
+{price:310000,bhk:3,city:"Noida",img:"https://images.unsplash.com/photo-1598928506311-c55ded91a20c"},
+{price:190000,bhk:2,city:"Indore",img:"https://images.unsplash.com/photo-1600585154200-be6161a56a0c"}
+];
+
+function show(list){
+let html="";
+list.forEach((p,i)=>{
+html+=`
+<div class="card" onclick="openModal(${i})">
+<img src="${p.img}">
+<p>₹ ${p.price}</p>
+<p>${p.bhk} BHK - ${p.city}</p>
+</div>`;
+});
+document.getElementById("list").innerHTML=html;
+}
+
+function filter(){
+let s=document.getElementById("search").value.toLowerCase();
+let b=document.getElementById("bhk").value;
+
+let result=data.filter(p=>{
+return p.city.toLowerCase().includes(s) &&
+(b==="all" || p.bhk==b || (b==="4" && p.bhk>=4));
+});
+
+show(result);
+}
+
+function openModal(i){
+let p=data[i];
+document.getElementById("modal").style.display="flex";
+document.getElementById("img").src=p.img;
+document.getElementById("price").innerText="₹ "+p.price;
+document.getElementById("info").innerText=p.bhk+" BHK - "+p.city;
+}
+
+function closeModal(){
+document.getElementById("modal").style.display="none";
+}
+
+show(data);
+
+</script>
+
+</body>
+</html>
